@@ -1,0 +1,37 @@
+{
+    "defaultSeverity": "error",
+    "linterOptions": {
+        "exclude": [
+            "node_modules/"
+        ]
+    },
+    "extends": [
+        "tslint:recommended",
+        "tslint-immutable",
+        "tslint:latest",
+        "tslint-config-prettier"
+    ],
+    "jsRules": {},
+    "rules": {
+        "trailing-comma": [
+            true
+        ],
+        "semicolon": [
+            true,
+            "always"
+        ],
+        "no-console": false,
+        "no-empty": false,
+        "object-literal-sort-keys": false,
+        "no-arg": false,
+        "no-submodule-imports": false,
+        "max-classes-per-file": false,
+        "quotemark": [
+            true,
+            "double"
+        ],
+        "no-bitwise": false,
+        "no-implicit-dependencies": false
+    },
+    "rulesDirectory": []
+}
