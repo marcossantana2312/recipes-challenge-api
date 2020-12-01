@@ -21,4 +21,17 @@ export class RecipiesService {
             ],
         };
     }
+
+    public validateIngredients(ingredients?: string) {
+        if (!ingredients) {
+            throw new Error("You must send at least 1 ingredient");
+        }
+
+        const ingredientsArray = ingredients.split(",");
+
+        if (ingredientsArray.length > 3) {
+            throw new Error("The max number of ingredients is 3");
+        }
+        return ingredientsArray;
+    }
 }
