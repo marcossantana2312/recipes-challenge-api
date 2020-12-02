@@ -1,24 +1,22 @@
+import { GiphyFetch } from "@giphy/js-fetch-api";
 import { Injectable } from "@nestjs/common";
+import ax from "axios";
 
 @Injectable()
 export class RecipiesService {
-    public getRecipies(ingredients: string) {
+    public async getRecipies(ingredients: string) {
+        const ingredientsArray = this.validateIngredients(ingredients);
+        const recipes = await this.getRecipiesData(ingredientsArray);
         return {
-            keywords: ["onion", "tomato"],
-            recipes: [
-                {
-                    title: "Greek Omelet with Feta",
-                    ingredients: ["eggs", "feta cheese", "garlic", "red onions", "spinach", "tomato", "water"],
-                    link: "http://www.kraftfoods.com/kf/recipes/greek-omelet-feta-104508.aspx",
-                    gif: "https://media.giphy.com/media/xBRhcST67lI2c/giphy.gif",
-                },
-                {
-                    title: "Guacamole Dip Recipe",
-                    ingredients: ["avocado", "onions", "tomato"],
-                    link: "http://cookeatshare.com/recipes/guacamole-dip-2783",
-                    gif: "https://media.giphy.com/media/I3eVhMpz8hns4/giphy.gif",
-                },
-            ],
+            keywords: ingredientsArray,
+            recipes: await Promise.all(
+                recipes.map(async (recipe) => ({
+                    title: recipe.title,
+                    ingredients: recipe.ingredients,
+                    link: recipe.href,
+                    gif: await this.getRecipesGif(recipe.title),
+                })),
+            ),
         };
     }
 
@@ -27,11 +25,26 @@ export class RecipiesService {
             throw new Error("You must send at least 1 ingredient");
         }
 
-        const ingredientsArray = ingredients.split(",");
+        const ingredientsArray = ingredients.split(",").sort();
 
         if (ingredientsArray.length > 3) {
             throw new Error("The max number of ingredients is 3");
         }
         return ingredientsArray;
     }
+
+    public async getRecipiesData(ingredients: string[]) {
+        return ax.get(`${process.env.RECIPES_URL}/?i=${ingredients.join(",")}`).then((res) => res.data.results as IResult[]);
+    }
+
+    public async getRecipesGif(recipeName: string) {
+        return ax.get(`${process.env.GIPHY_URL}?api_key=${process.env.GIPHY_KEY}&q=${recipeName}&limit=1`).then((res) => res.data.data[0].url);
+    }
+}
+
+interface IResult {
+    title: string;
+    href: string;
+    ingredients: string;
+    thumbnail: string;
 }

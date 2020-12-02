@@ -6,7 +6,7 @@ export class RecipiesController {
     constructor(private readonly recipiesService: RecipiesService) {}
 
     @Get()
-    public getRecipies(@Query("i") ingredients: string) {
+    public async getRecipies(@Query("i") ingredients: string) {
         return this.recipiesService.getRecipies(ingredients);
     }
 }
