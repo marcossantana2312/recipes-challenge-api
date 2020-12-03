@@ -7,6 +7,6 @@ export class RecipesController {
 
     @Get()
     public async getRecipies(@Query("i") ingredients: string) {
-        return this.recipiesService.getRecipies(ingredients);
+        return this.recipiesService.getRecipes(ingredients);
     }
 }

@@ -4,9 +4,9 @@ import { ConfigService } from "@nestjs/config";
 @Injectable()
 export class RecipesService {
     constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
-    public async getRecipies(ingredients: string) {
+    public async getRecipes(ingredients: string) {
         const ingredientsArray = this.validateIngredients(ingredients);
-        const recipes = await this.getRecipiesData(ingredientsArray);
+        const recipes = await this.getRecipesData(ingredientsArray);
         return {
             keywords: ingredientsArray,
             recipes: await Promise.all(
@@ -33,7 +33,7 @@ export class RecipesService {
         return ingredientsArray;
     }
 
-    public async getRecipiesData(ingredients: string[]) {
+    public async getRecipesData(ingredients: string[]) {
         return this.httpService
             .get<{ results: IResult[] }>(this.configService.get("RECIPES_URL"), {
                 params: {
