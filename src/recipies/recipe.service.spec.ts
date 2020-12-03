@@ -19,7 +19,7 @@ describe("RecipiesService", () => {
     it("should return a ingredients array", () => {
         const ingredientString = `${faker.commerce.productName()},${faker.commerce.productName()},${faker.commerce.productName()}`;
 
-        expect(recipiesService.validateIngredients(ingredientString)).toStrictEqual(ingredientString.split(","));
+        expect(recipiesService.validateIngredients(ingredientString)).toStrictEqual(ingredientString.split(",").sort());
     });
 
     it("should return error message when no ingredients was passed", () => {
