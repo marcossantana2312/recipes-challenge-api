@@ -1,7 +1,7 @@
 import { HttpModule, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { RecipiesController } from "./recipe.controller";
-import { RecipiesService } from "./recipe.service";
+import { RecipesController } from "./recipe.controller";
+import { RecipesService } from "./recipe.service";
 
 @Module({
     imports: [
@@ -10,7 +10,7 @@ import { RecipiesService } from "./recipe.service";
             isGlobal: true,
         }),
     ],
-    controllers: [RecipiesController],
-    providers: [RecipiesService],
+    controllers: [RecipesController],
+    providers: [RecipesService],
 })
-export class RecipiesModule {}
+export class RecipesModule {}

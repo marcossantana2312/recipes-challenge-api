@@ -1,19 +1,19 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import * as faker from "faker";
 
-import { RecipiesController } from "./recipe.controller";
-import { RecipiesService } from "./recipe.service";
+import { RecipesController } from "./recipe.controller";
+import { RecipesService } from "./recipe.service";
 
 describe("RecipiesService", () => {
-    let recipiesService: RecipiesService;
+    let recipiesService: RecipesService;
 
     beforeEach(async () => {
         const app = await Test.createTestingModule({
-            controllers: [RecipiesController],
-            providers: [RecipiesService],
+            controllers: [RecipesController],
+            providers: [RecipesService],
         }).compile();
 
-        recipiesService = app.get<RecipiesService>(RecipiesService);
+        recipiesService = app.get<RecipesService>(RecipesService);
     });
 
     it("should return a ingredients array", () => {

@@ -1,8 +1,8 @@
-import { BadRequestException, HttpService, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, HttpService, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
-export class RecipiesService {
+export class RecipesService {
     constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
     public async getRecipies(ingredients: string) {
         const ingredientsArray = this.validateIngredients(ingredients);
@@ -37,11 +37,14 @@ export class RecipiesService {
         return this.httpService
             .get<{ results: IResult[] }>(this.configService.get("RECIPES_URL"), {
                 params: {
-                    i: ingredients,
+                    i: ingredients.join(","),
                 },
             })
             .toPromise()
-            .then((response) => response.data.results);
+            .then((response) => response.data.results)
+            .catch((err) => {
+                throw new HttpException("External Service Unavailable", 503);
+            });
     }
 
     public async getRecipesGif(recipeName: string) {
@@ -54,7 +57,10 @@ export class RecipiesService {
                 },
             })
             .toPromise()
-            .then((response) => response.data.data[0].url as string);
+            .then((response) => response.data.data[0].url as string)
+            .catch((err) => {
+                throw new HttpException("External Service Unavailable", 503);
+            });
     }
 }
 
