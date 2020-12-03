@@ -1,4 +1,4 @@
-import {  HttpModule, Module } from "@nestjs/common";
+import { HttpModule, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { RecipiesController } from "./recipe.controller";
 import { RecipiesService } from "./recipe.service";
@@ -13,4 +13,4 @@ import { RecipiesService } from "./recipe.service";
     controllers: [RecipiesController],
     providers: [RecipiesService],
 })
-export class RecipiesModule { }
+export class RecipiesModule {}

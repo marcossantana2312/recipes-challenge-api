@@ -1,9 +1,9 @@
-import { GiphyFetch } from "@giphy/js-fetch-api";
-import { Injectable } from "@nestjs/common";
-import ax from "axios";
+import { BadRequestException, HttpService, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class RecipiesService {
+    constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
     public async getRecipies(ingredients: string) {
         const ingredientsArray = this.validateIngredients(ingredients);
         const recipes = await this.getRecipiesData(ingredientsArray);
@@ -22,23 +22,39 @@ export class RecipiesService {
 
     public validateIngredients(ingredients?: string) {
         if (!ingredients) {
-            throw new Error("You must send at least 1 ingredient");
+            throw new BadRequestException("You must send at least 1 ingredient");
         }
 
         const ingredientsArray = ingredients.split(",").sort();
 
         if (ingredientsArray.length > 3) {
-            throw new Error("The max number of ingredients is 3");
+            throw new BadRequestException("The max number of ingredients is 3");
         }
         return ingredientsArray;
     }
 
     public async getRecipiesData(ingredients: string[]) {
-        return ax.get(`${process.env.RECIPES_URL}/?i=${ingredients.join(",")}`).then((res) => res.data.results as IResult[]);
+        return this.httpService
+            .get<{ results: IResult[] }>(this.configService.get("RECIPES_URL"), {
+                params: {
+                    i: ingredients,
+                },
+            })
+            .toPromise()
+            .then((response) => response.data.results);
     }
 
     public async getRecipesGif(recipeName: string) {
-        return ax.get(`${process.env.GIPHY_URL}?api_key=${process.env.GIPHY_KEY}&q=${recipeName}&limit=1`).then((res) => res.data.data[0].url);
+        return this.httpService
+            .get(this.configService.get("GIPHY_URL"), {
+                params: {
+                    api_key: this.configService.get("GIPHY_KEY"),
+                    q: recipeName,
+                    limit: 1,
+                },
+            })
+            .toPromise()
+            .then((response) => response.data.data[0].url as string);
     }
 }
 
