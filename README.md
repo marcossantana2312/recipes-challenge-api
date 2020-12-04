@@ -5,6 +5,8 @@
 ### Requisitos
   [Node.js](https://nodejs.org/pt-br/download/)
 ### Executando
+Na pasta raiz do projeto:
+
  1) Instale as dependências do projeto:
 ```sh
 npm i
@@ -41,3 +43,13 @@ A aplicação estará disponível em ```localhost:3000```, se executada localmen
 ```
 http://localhost:3000/api/recipes?i={ingredient1},{ingredient2}
 ```
+### Testes
+
+```sh
+#Para executar teste de integração
+npm run test:e2e
+
+#Para executar testes unitários
+npm run test
+```
+
