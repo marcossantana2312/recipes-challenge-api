@@ -5,7 +5,7 @@ import { RecipesModule } from "./recipe/recipe.module";
 @Module({
     imports: [
         ConfigModule.forRoot({
-            envFilePath: ".env"
+            isGlobal: true,
         }),
         RecipesModule
     ],
