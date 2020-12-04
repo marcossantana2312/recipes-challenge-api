@@ -35,9 +35,14 @@ docker build -t nome_desejado_para_imagem .
 ```
 2) Rode sua imagem docker utilizando`:
 ```sh
-docker run -p 3000:3000 -d nome_desejado_para_imagem
+docker run -p 3000:3000 --env-file ./.env -d nome_desejado_para_imagem
 ```
+  OU 
 
+ 1) Execute o comando na pasta raiz do projeto:
+```sh
+docker-compose up --build
+```
 
 A aplicação estará disponível em ```localhost:3000```, se executada localmente, estará disponível em  ```localhost:PORT```, de acordo com o valor de ```PORT``` definido no `.env`, exemplo:
 ```
