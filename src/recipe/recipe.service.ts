@@ -1,12 +1,12 @@
-import { BadRequestException, HttpException, HttpService, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { RecipesIntegration } from "./recipe.integration";
 
 @Injectable()
 export class RecipesService {
-    constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
+    constructor(private readonly recipesIntegration: RecipesIntegration) {}
     public async getRecipes(ingredients: string) {
         const ingredientsArray = this.validateIngredients(ingredients);
-        const recipes = await this.getRecipesData(ingredientsArray);
+        const recipes = await this.recipesIntegration.getRecipesData(ingredientsArray);
         return {
             keywords: ingredientsArray,
             recipes: await Promise.all(
@@ -14,7 +14,7 @@ export class RecipesService {
                     title: recipe.title,
                     ingredients: recipe.ingredients,
                     link: recipe.href,
-                    gif: await this.getRecipesGif(recipe.title),
+                    gif: await this.recipesIntegration.getRecipesGif(recipe.title),
                 })),
             ),
         };
@@ -32,41 +32,4 @@ export class RecipesService {
         }
         return ingredientsArray;
     }
-
-    public async getRecipesData(ingredients: string[]) {
-        return this.httpService
-            .get<{ results: IResult[] }>(this.configService.get("RECIPES_URL"), {
-                params: {
-                    i: ingredients.join(","),
-                },
-            })
-            .toPromise()
-            .then((response) => response.data.results)
-            .catch((err) => {
-                throw new HttpException("External Service Unavailable", 503);
-            });
-    }
-
-    public async getRecipesGif(recipeName: string) {
-        return this.httpService
-            .get(this.configService.get("GIPHY_URL"), {
-                params: {
-                    api_key: this.configService.get("GIPHY_KEY"),
-                    q: recipeName,
-                    limit: 1,
-                },
-            })
-            .toPromise()
-            .then((response) => response.data.data[0].url as string)
-            .catch((err) => {
-                throw new HttpException("External Service Unavailable", 503);
-            });
-    }
-}
-
-interface IResult {
-    title: string;
-    href: string;
-    ingredients: string;
-    thumbnail: string;
 }

@@ -1,6 +1,7 @@
 import { HttpModule, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { RecipesController } from "./recipe.controller";
+import { RecipesIntegration } from "./recipe.integration";
 import { RecipesService } from "./recipe.service";
 
 @Module({
@@ -11,6 +12,6 @@ import { RecipesService } from "./recipe.service";
         }),
     ],
     controllers: [RecipesController],
-    providers: [RecipesService],
+    providers: [RecipesService, RecipesIntegration],
 })
 export class RecipesModule {}

@@ -1,7 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import * as faker from "faker";
 
+import { HttpModule } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { RecipesController } from "./recipe.controller";
+import { RecipesIntegration } from "./recipe.integration";
 import { RecipesService } from "./recipe.service";
 
 describe("RecipiesService", () => {
@@ -9,8 +12,9 @@ describe("RecipiesService", () => {
 
     beforeEach(async () => {
         const app = await Test.createTestingModule({
+            imports: [HttpModule, ConfigModule],
             controllers: [RecipesController],
-            providers: [RecipesService],
+            providers: [RecipesService, RecipesIntegration],
         }).compile();
 
         recipiesService = app.get<RecipesService>(RecipesService);
